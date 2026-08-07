@@ -1,23 +1,45 @@
+import { useState } from "react";
+
 import Sidebar from "../components/common/Sidebar";
 import Header from "../components/common/Header";
 
 export default function DashboardLayout({ children }) {
 
+    const [collapsed, setCollapsed] = useState(false);
+
     return (
 
-        <div className="flex min-h-screen bg-slate-100">
+        <div className="bg-slate-100 min-h-screen">
 
-            <Sidebar />
+            <Sidebar
+                collapsed={collapsed}
+                setCollapsed={setCollapsed}
+            />
 
-            <div className="flex-1 p-8">
+            <div
+                className={`
+                    fixed
+                    top-0
+                    right-0
+                    h-screen
+                    overflow-y-auto
+                    transition-all
+                    duration-300
+                    ${collapsed ? "left-20" : "left-64"}
+                `}
+            >
 
-                <Header />
+                <div className="p-8">
 
-                <main className="mt-8">
+                    <Header />
 
-                    {children}
+                    <main className="mt-8">
 
-                </main>
+                        {children}
+
+                    </main>
+
+                </div>
 
             </div>
 

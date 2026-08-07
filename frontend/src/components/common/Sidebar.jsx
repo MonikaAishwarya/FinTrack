@@ -1,60 +1,43 @@
 import {
     LayoutDashboard,
-    Receipt,
     Wallet,
-    LogOut
+    LogOut,
+    ChevronLeft,
+    ChevronRight
 } from "lucide-react";
 
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
-export default function Sidebar() {
+export default function Sidebar({ collapsed, setCollapsed }) {
 
     const { logout } = useAuth();
 
-    const navigate = useNavigate();
-
-    const handleLogout = () => {
-
-        if (window.confirm("Are you sure you want to logout?")) {
-
-            logout();
-
-            navigate("/login");
-
-        }
-
-    };
-
-    const menu = [
-
-        {
-            title: "Dashboard",
-            icon: <LayoutDashboard size={20} />,
-            path: "/dashboard"
-        },
-
-        {
-            title: "Transactions",
-            icon: <Receipt size={20} />,
-            path: "/transactions"
-        }
-
-    ];
-
     return (
 
-        <aside className="w-72 min-h-screen bg-slate-900 text-white flex flex-col">
+        <aside
+            className={`
+                fixed
+                top-0
+                left-0
+                h-screen
+                ${collapsed ? "w-20" : "w-64"}
+                bg-slate-900
+                text-white
+                shadow-xl
+                transition-all
+                duration-300
+                flex
+                flex-col
+                z-50
+            `}
+        >
 
-            <div className="p-8 border-b border-slate-700">
+            {/* Top */}
 
-                <div className="flex items-center gap-3">
+            <div className="flex items-center justify-between p-5 border-b border-slate-700">
 
-                    <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center">
-
-                        <Wallet size={24} />
-
-                    </div>
+                {!collapsed && (
 
                     <div>
 
@@ -62,67 +45,107 @@ export default function Sidebar() {
                             FinTrack
                         </h1>
 
-                        <p className="text-slate-400 text-sm">
+                        <p className="text-sm text-slate-400">
                             Personal Finance
                         </p>
 
                     </div>
 
-                </div>
+                )}
+
+                <button
+
+                    onClick={() => setCollapsed(!collapsed)}
+
+                    className="p-2 rounded-lg hover:bg-slate-700 transition"
+
+                >
+
+                    {
+
+                        collapsed
+
+                            ? <ChevronRight size={20} />
+
+                            : <ChevronLeft size={20} />
+
+                    }
+
+                </button>
 
             </div>
 
-            <nav className="flex-1 mt-8">
+            {/* Navigation */}
 
-                {
+            <nav className="flex-1 mt-8 flex flex-col gap-2 px-3">
 
-                    menu.map((item) => (
+                <NavLink
 
-                        <NavLink
-                            key={item.title}
-                            to={item.path}
-                            className={({ isActive }) =>
+                    to="/dashboard"
 
-                                `flex items-center gap-4 px-8 py-4 transition
+                    className={({ isActive }) =>
 
-                                ${
+                        `flex items-center gap-4 px-4 py-3 rounded-xl transition
+                        ${
+                            isActive
+                                ? "bg-blue-600"
+                                : "hover:bg-slate-800"
+                        }`
 
-                                    isActive
+                    }
 
-                                        ? "bg-blue-600"
+                >
 
-                                        : "hover:bg-slate-800"
+                    <LayoutDashboard size={22} />
 
-                                }`
+                    {!collapsed && <span>Dashboard</span>}
 
-                            }
-                        >
+                </NavLink>
 
-                            {item.icon}
+                <NavLink
 
-                            {item.title}
+                    to="/transactions"
 
-                        </NavLink>
+                    className={({ isActive }) =>
 
-                    ))
+                        `flex items-center gap-4 px-4 py-3 rounded-xl transition
+                        ${
+                            isActive
+                                ? "bg-blue-600"
+                                : "hover:bg-slate-800"
+                        }`
 
-                }
+                    }
+
+                >
+
+                    <Wallet size={22} />
+
+                    {!collapsed && <span>Transactions</span>}
+
+                </NavLink>
 
             </nav>
 
-            <button
+            {/* Bottom */}
 
-                onClick={handleLogout}
+            <div className="mt-auto p-3">
 
-                className="flex items-center gap-4 px-8 py-5 hover:bg-red-600 transition"
+                <button
 
-            >
+                    onClick={logout}
 
-                <LogOut size={20} />
+                    className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-red-600 transition"
 
-                Logout
+                >
 
-            </button>
+                    <LogOut size={22} />
+
+                    {!collapsed && <span>Logout</span>}
+
+                </button>
+
+            </div>
 
         </aside>
 
