@@ -22,7 +22,7 @@ def register():
 
     # Create new user
     user = User(
-        name=data["username"],
+        name=data["name"],
         email=data["email"]
     )
 
@@ -68,11 +68,11 @@ def login():
 
 
     return jsonify({
-
         "message": "Login Successful",
-
-        "username": user.name,
-
-        "token": token
-
-    }), 200
+        "token": token,
+        "user": {
+            "id": user.id,
+            "name": user.name,
+            "email": user.email
+    }
+}), 200
