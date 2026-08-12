@@ -6,6 +6,7 @@ export default function TransactionForm({ onTransactionAdded }) {
     const [amount, setAmount] = useState("");
     const [category, setCategory] = useState("");
     const [type, setType] = useState("income");
+    const [status, setStatus] = useState("Success");
 
     const handleSubmit = (e) => {
 
@@ -15,13 +16,15 @@ export default function TransactionForm({ onTransactionAdded }) {
             title,
             amount: Number(amount),
             category,
-            type
+            type,
+            status
         });
 
         setTitle("");
         setAmount("");
         setCategory("");
         setType("income");
+        setStatus("Success");
 
     };
 
@@ -42,6 +45,8 @@ export default function TransactionForm({ onTransactionAdded }) {
                 className="space-y-5"
             >
 
+                {/* Title */}
+
                 <div>
 
                     <label className="block text-sm font-medium text-slate-600 mb-2">
@@ -59,6 +64,8 @@ export default function TransactionForm({ onTransactionAdded }) {
 
                 </div>
 
+                {/* Amount */}
+
                 <div>
 
                     <label className="block text-sm font-medium text-slate-600 mb-2">
@@ -71,10 +78,14 @@ export default function TransactionForm({ onTransactionAdded }) {
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
                         required
+                        min="0"
+                        step="0.01"
                         className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 transition"
                     />
 
                 </div>
+
+                {/* Category */}
 
                 <div>
 
@@ -93,6 +104,8 @@ export default function TransactionForm({ onTransactionAdded }) {
 
                 </div>
 
+                {/* Type */}
+
                 <div>
 
                     <label className="block text-sm font-medium text-slate-600 mb-2">
@@ -104,6 +117,7 @@ export default function TransactionForm({ onTransactionAdded }) {
                         onChange={(e) => setType(e.target.value)}
                         className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 transition"
                     >
+
                         <option value="income">
                             Income
                         </option>
@@ -115,6 +129,42 @@ export default function TransactionForm({ onTransactionAdded }) {
                     </select>
 
                 </div>
+
+                {/* Status */}
+
+                <div>
+
+                    <label className="block text-sm font-medium text-slate-600 mb-2">
+                        Status
+                    </label>
+
+                    <select
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
+                        className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 transition"
+                    >
+
+                        <option value="Success">
+                            Success
+                        </option>
+
+                        <option value="Pending">
+                            Pending
+                        </option>
+
+                        <option value="Failed">
+                            Failed
+                        </option>
+
+                        <option value="Refunded">
+                            Refunded
+                        </option>
+
+                    </select>
+
+                </div>
+
+                {/* Submit */}
 
                 <button
                     type="submit"

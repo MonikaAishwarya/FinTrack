@@ -16,6 +16,12 @@ class Transaction(db.Model):
         nullable=False
     )
 
+    customer_id = db.Column(
+        db.Integer,
+        db.ForeignKey("customers.id"),
+        nullable=True
+    )
+
     title = db.Column(
         db.String(100),
         nullable=False
@@ -34,6 +40,17 @@ class Transaction(db.Model):
     category = db.Column(
         db.String(50),
         nullable=False
+    )
+
+    payment_method = db.Column(
+        db.String(50),
+        nullable=True
+    )
+
+    status = db.Column(
+        db.String(20),
+        nullable=False,
+        default="Success"
     )
 
     created_at = db.Column(

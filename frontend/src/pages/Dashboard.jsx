@@ -6,6 +6,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import SummaryCards from "../components/dashboard/SummaryCards";
 import MonthlyChart from "../components/dashboard/MonthlyChart";
 import RecentTransactions from "../components/dashboard/RecentTransactions";
+import FraudAlerts from "../components/fraud/FraudAlerts";
 
 export default function Dashboard() {
 
@@ -71,6 +72,8 @@ export default function Dashboard() {
             <RecentTransactions
                 transactions={recentTransactions}
             />
+
+            <FraudAlerts />
 
         </DashboardLayout>
 

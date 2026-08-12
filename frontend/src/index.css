@@ -10,3 +10,117 @@ body {
   background-color: #f8fafc;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.fraud-alerts-section {
+    margin-top: 30px;
+    padding: 24px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.fraud-alerts-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.fraud-alerts-header h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.fraud-alert-count {
+    min-width: 28px;
+    height: 28px;
+    padding: 0 8px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ef4444;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.fraud-alerts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.fraud-alert-card {
+    padding: 16px;
+    border-radius: 12px;
+    border-left: 4px solid;
+    background: #fafafa;
+}
+
+.fraud-alert-high {
+    border-left-color: #ef4444;
+}
+
+.fraud-alert-medium {
+    border-left-color: #f59e0b;
+}
+
+.fraud-alert-low {
+    border-left-color: #22c55e;
+}
+
+.fraud-alert-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.fraud-alert-icon {
+    font-size: 18px;
+}
+
+.fraud-alert-top h3 {
+    margin: 0 0 5px;
+    font-size: 15px;
+}
+
+.fraud-alert-severity {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.fraud-alert-high .fraud-alert-severity {
+    color: #dc2626;
+}
+
+.fraud-alert-medium .fraud-alert-severity {
+    color: #d97706;
+}
+
+.fraud-alert-low .fraud-alert-severity {
+    color: #16a34a;
+}
+
+.fraud-alert-message {
+    margin: 12px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.fraud-alert-details {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: #777;
+}
+
+.fraud-empty-state {
+    padding: 20px;
+    text-align: center;
+    color: #16a34a;
+    background: #f0fdf4;
+    border-radius: 10px;
+}

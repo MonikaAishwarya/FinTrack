@@ -15,6 +15,8 @@ class User(db.Model):
 
     password = db.Column(db.String(255), nullable=False)
 
+    last_login_location = db.Column(db.String(100), nullable=True)
+
     created_at = db.Column(
         db.DateTime,
         server_default=db.func.now()
