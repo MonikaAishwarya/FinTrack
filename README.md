@@ -538,20 +538,91 @@ The application implements:
 * User-specific authorization
 * User-specific transaction access
 * User-specific customer access
-* User-specific analytics access
 * User-specific fraud alert access
 * User-specific report access
 * Environment-based configuration for sensitive values
 
-Sensitive values such as:
+Sensitive values such as database credentials and JWT secrets should be stored in environment variables and should not be committed to GitHub.
 
-* Database credentials
-* JWT secrets
-* API keys
+## Testing & Validation
 
-should be stored in environment variables and should not be committed to GitHub.
+The application was manually tested across the major functional modules to verify that the implemented features work correctly.
 
----
+### Authentication
+
+* User registration
+* User login
+* Invalid login credentials
+* JWT-protected routes
+* Logout
+
+### Transaction Management
+
+* Add transaction
+* View transactions
+* Update transaction
+* Delete transaction
+* Search transactions
+* Filter by transaction type
+* Filter by transaction status
+* Filter by date
+* Pagination
+* Customer-linked transactions
+
+### Customer Management
+
+* Add customer
+* View customers
+* Update customer
+* Delete customer
+* Customer analytics
+* Customer-transaction relationship handling
+
+### Dashboard & Analytics
+
+* Dashboard summary
+* Income and expense calculations
+* Balance calculation
+* Monthly financial analytics
+* Category-wise expense analysis
+* Revenue trend
+* Daily transaction analysis
+* Monthly transaction analysis
+* Customer growth analysis
+* Payment method distribution
+
+### Fraud Detection
+
+* High-value transaction detection
+* Multiple failed transaction detection
+* Multiple transactions within a short duration
+* Multiple login location detection
+* Fraud alert retrieval
+
+### Reports
+
+* Daily report generation
+* Weekly report generation
+* Monthly report generation
+* CSV report export
+* PDF report export
+
+### Redis Caching
+
+* Dashboard cache creation
+* Cached dashboard data retrieval
+* Cache invalidation after transaction changes
+
+### Database
+
+* MySQL database initialization
+* User and customer relationships
+* User and transaction relationships
+* Customer and transaction relationships
+* Fraud alert and transaction relationships
+* Foreign-key constraints
+* Database indexes
+
 
 ## Installation and Setup
 
