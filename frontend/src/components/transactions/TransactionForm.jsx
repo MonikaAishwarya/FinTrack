@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+
+import api from "../../services/api";
 
 export default function TransactionForm({ onTransactionAdded }) {
 
@@ -8,25 +11,100 @@ export default function TransactionForm({ onTransactionAdded }) {
     const [type, setType] = useState("income");
     const [status, setStatus] = useState("Success");
 
+    // Customer
+    const [customers, setCustomers] = useState([]);
+    const [customerId, setCustomerId] = useState("");
+
+    const [loadingCustomers, setLoadingCustomers] = useState(true);
+
+
+    // --------------------------------------------------
+    // FETCH CUSTOMERS
+    // --------------------------------------------------
+
+    useEffect(() => {
+
+        const fetchCustomers = async () => {
+
+            try {
+
+                setLoadingCustomers(true);
+
+                const response = await api.get(
+                    "/customers/"
+                );
+
+                setCustomers(response.data);
+
+            } catch (error) {
+
+                console.error(
+                    "Failed to fetch customers:",
+                    error
+                );
+
+                toast.error(
+                    error.response?.data?.message ||
+                    "Failed to load customers"
+                );
+
+            } finally {
+
+                setLoadingCustomers(false);
+
+            }
+
+        };
+
+        fetchCustomers();
+
+    }, []);
+
+
+    // --------------------------------------------------
+    // HANDLE SUBMIT
+    // --------------------------------------------------
+
     const handleSubmit = (e) => {
 
         e.preventDefault();
 
-        onTransactionAdded({
+        // Customer is optional because your backend
+        // currently allows customer_id to be null.
+
+        const transactionData = {
+
             title,
+
             amount: Number(amount),
+
             category,
+
             type,
-            status
-        });
+
+            status,
+
+            customer_id: customerId
+                ? Number(customerId)
+                : null
+
+        };
+
+        onTransactionAdded(
+            transactionData
+        );
+
+        // Reset form
 
         setTitle("");
         setAmount("");
         setCategory("");
         setType("income");
         setStatus("Success");
+        setCustomerId("");
 
     };
+
 
     return (
 
@@ -40,12 +118,16 @@ export default function TransactionForm({ onTransactionAdded }) {
                 Record your income or expenses.
             </p>
 
+
             <form
                 onSubmit={handleSubmit}
                 className="space-y-5"
             >
 
-                {/* Title */}
+
+                {/* ------------------------------------------------ */}
+                {/* TITLE */}
+                {/* ------------------------------------------------ */}
 
                 <div>
 
@@ -57,14 +139,19 @@ export default function TransactionForm({ onTransactionAdded }) {
                         type="text"
                         placeholder="Coffee, Salary..."
                         value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        onChange={(e) =>
+                            setTitle(e.target.value)
+                        }
                         required
                         className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 transition"
                     />
 
                 </div>
 
-                {/* Amount */}
+
+                {/* ------------------------------------------------ */}
+                {/* AMOUNT */}
+                {/* ------------------------------------------------ */}
 
                 <div>
 
@@ -76,7 +163,9 @@ export default function TransactionForm({ onTransactionAdded }) {
                         type="number"
                         placeholder="0"
                         value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
+                        onChange={(e) =>
+                            setAmount(e.target.value)
+                        }
                         required
                         min="0"
                         step="0.01"
@@ -85,7 +174,10 @@ export default function TransactionForm({ onTransactionAdded }) {
 
                 </div>
 
-                {/* Category */}
+
+                {/* ------------------------------------------------ */}
+                {/* CATEGORY */}
+                {/* ------------------------------------------------ */}
 
                 <div>
 
@@ -97,14 +189,19 @@ export default function TransactionForm({ onTransactionAdded }) {
                         type="text"
                         placeholder="Food, Bills..."
                         value={category}
-                        onChange={(e) => setCategory(e.target.value)}
+                        onChange={(e) =>
+                            setCategory(e.target.value)
+                        }
                         required
                         className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 transition"
                     />
 
                 </div>
 
-                {/* Type */}
+
+                {/* ------------------------------------------------ */}
+                {/* TYPE */}
+                {/* ------------------------------------------------ */}
 
                 <div>
 
@@ -114,7 +211,9 @@ export default function TransactionForm({ onTransactionAdded }) {
 
                     <select
                         value={type}
-                        onChange={(e) => setType(e.target.value)}
+                        onChange={(e) =>
+                            setType(e.target.value)
+                        }
                         className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 transition"
                     >
 
@@ -130,7 +229,67 @@ export default function TransactionForm({ onTransactionAdded }) {
 
                 </div>
 
-                {/* Status */}
+
+                {/* ------------------------------------------------ */}
+                {/* CUSTOMER */}
+                {/* ------------------------------------------------ */}
+
+                <div>
+
+                    <label className="block text-sm font-medium text-slate-600 mb-2">
+                        Customer
+                    </label>
+
+                    <select
+                        value={customerId}
+                        onChange={(e) =>
+                            setCustomerId(e.target.value)
+                        }
+                        disabled={loadingCustomers}
+                        className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 transition disabled:bg-slate-100"
+                    >
+
+                        <option value="">
+                            {loadingCustomers
+                                ? "Loading customers..."
+                                : customers.length === 0
+                                    ? "No customers available"
+                                    : "Select Customer (Optional)"
+                            }
+                        </option>
+
+
+                        {customers.map((customer) => (
+
+                            <option
+                                key={customer.id}
+                                value={customer.id}
+                            >
+                                {customer.customer_name}
+                            </option>
+
+                        ))}
+
+                    </select>
+
+
+                    {!loadingCustomers &&
+                        customers.length === 0 && (
+
+                            <p className="text-xs text-slate-500 mt-2">
+                                Add a customer from the Customers page
+                                to link this transaction.
+                            </p>
+
+                        )
+                    }
+
+                </div>
+
+
+                {/* ------------------------------------------------ */}
+                {/* STATUS */}
+                {/* ------------------------------------------------ */}
 
                 <div>
 
@@ -140,7 +299,9 @@ export default function TransactionForm({ onTransactionAdded }) {
 
                     <select
                         value={status}
-                        onChange={(e) => setStatus(e.target.value)}
+                        onChange={(e) =>
+                            setStatus(e.target.value)
+                        }
                         className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 transition"
                     >
 
@@ -164,7 +325,10 @@ export default function TransactionForm({ onTransactionAdded }) {
 
                 </div>
 
-                {/* Submit */}
+
+                {/* ------------------------------------------------ */}
+                {/* SUBMIT */}
+                {/* ------------------------------------------------ */}
 
                 <button
                     type="submit"

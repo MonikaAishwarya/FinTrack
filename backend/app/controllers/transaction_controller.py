@@ -3,8 +3,9 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from app.services.fraud_service import check_transaction_for_fraud
 
-from app.extensions import db
+from app.extensions import db, redis_client
 from app.models.transaction_model import Transaction
+from app.models.fraud_alert_model import FraudAlert
 
 
 # --------------------------------------------------
@@ -15,6 +16,7 @@ from app.models.transaction_model import Transaction
 def add_transaction():
 
     data = request.get_json()
+    user_id = int(get_jwt_identity())
 
     transaction = Transaction(
         user_id=int(get_jwt_identity()),
@@ -29,6 +31,9 @@ def add_transaction():
 
     db.session.add(transaction)
     db.session.commit()
+    redis_client.delete(
+        f"dashboard_summary:{user_id}"
+    )
 
     fraud_alerts = check_transaction_for_fraud(
         transaction
@@ -268,6 +273,10 @@ def update_transaction(id):
 
     db.session.commit()
 
+    redis_client.delete(
+        f"dashboard_summary:{user_id}"
+    )
+
     return jsonify({
 
         "message": "Transaction Updated Successfully"
@@ -290,17 +299,26 @@ def delete_transaction(id):
     ).first()
 
     if not transaction:
-
         return jsonify({
             "message": "Transaction not found"
         }), 404
 
+    # Delete fraud alerts linked to this transaction
+    FraudAlert.query.filter_by(
+        transaction_id=transaction.id,
+        user_id=user_id
+    ).delete()
+
+    # Delete transaction
     db.session.delete(transaction)
 
     db.session.commit()
 
+    # Clear dashboard cache
+    redis_client.delete(
+        f"dashboard_summary:{user_id}"
+    )
+
     return jsonify({
-
-        "message": "Transaction Deleted Successfully"
-
-    })
+        "message": "Transaction deleted successfully"
+    }), 200

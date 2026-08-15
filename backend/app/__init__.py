@@ -7,6 +7,7 @@ from app.routes.dashboard_routes import dashboard_bp
 from app.routes.customer_routes import customer_bp
 from app.routes.report_routes import report_bp
 from app.routes.fraud_routes import fraud_bp
+from app.routes.analytics_routes import analytics_bp
 
 from app.config.config import Config
 from app.extensions import db, jwt
@@ -47,5 +48,6 @@ def create_app():
     app.register_blueprint(customer_bp, url_prefix="/api/customers")
     app.register_blueprint(report_bp, url_prefix="/api/reports")
     app.register_blueprint(fraud_bp, url_prefix="/api/fraud")
+    app.register_blueprint(analytics_bp, url_prefix="/api/analytics")
 
     return app

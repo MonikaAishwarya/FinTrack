@@ -614,6 +614,7 @@ export default function Transactions() {
                 <TransactionTable
                     transactions={transactions}
                     onDelete={deleteTransaction}
+                    onTransactionUpdated={fetchTransactions}
                 />
 
 

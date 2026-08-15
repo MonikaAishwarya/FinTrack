@@ -5,6 +5,11 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Transactions from "./pages/Transactions";
+import Reports from "./pages/Reports";
+import Customers from "./pages/Customers";
+import FraudAlerts from "./pages/FraudAlerts";
+import Analytics from "./pages/Analytics";
+import Settings from "./pages/Settings";
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
@@ -36,6 +41,52 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+
+                <Route
+                    path="/reports"
+                    element={
+                        <ProtectedRoute>
+                            <Reports />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/customers"
+                    element={
+                        <ProtectedRoute>
+                            <Customers />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/fraud-alerts"
+                    element={
+                        <ProtectedRoute>
+                            <FraudAlerts />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/analytics"
+                    element={
+                        <ProtectedRoute>
+                            <Analytics />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/settings"
+                    element={
+                        <ProtectedRoute>
+                            <Settings />
+                        </ProtectedRoute>
+                    }
+                />
+
             </Routes>
         </BrowserRouter>
     );

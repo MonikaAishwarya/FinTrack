@@ -148,6 +148,10 @@ def update_customer(id):
 # DELETE CUSTOMER
 # --------------------------------------------------
 
+# --------------------------------------------------
+# DELETE CUSTOMER
+# --------------------------------------------------
+
 @jwt_required()
 def delete_customer(id):
 
@@ -164,11 +168,30 @@ def delete_customer(id):
             "message": "Customer not found"
         }), 404
 
+    # --------------------------------------------------
+    # Keep transactions but remove customer association
+    # --------------------------------------------------
+
+    Transaction.query.filter_by(
+        customer_id=customer.id,
+        user_id=user_id
+    ).update(
+        {
+            "customer_id": None
+        },
+        synchronize_session=False
+    )
+
+    # --------------------------------------------------
+    # Delete customer
+    # --------------------------------------------------
+
     db.session.delete(customer)
+
     db.session.commit()
 
     return jsonify({
-        "message": "Customer Deleted Successfully"
+        "message": "Customer Deleted Successfully. Transactions were preserved."
     }), 200
 
 # --------------------------------------------------
