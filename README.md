@@ -1,6 +1,6 @@
 # FinTrack – Personal Finance & Financial Analytics Dashboard
 
-FinTrack is a full-stack personal finance and financial analytics dashboard that allows users to securely manage transactions, monitor income and expenses, visualize financial activity, detect potentially fraudulent activity, and generate financial reports.
+FinTrack is a full-stack personal finance and financial analytics dashboard that enables users to securely manage transactions, monitor income and expenses, manage customers, visualize financial activity, detect potentially fraudulent activity, and generate financial reports.
 
 ## Features
 
@@ -10,14 +10,22 @@ FinTrack is a full-stack personal finance and financial analytics dashboard that
 * Protected API endpoints
 * User-specific data access
 * Transaction management
-* Add and delete transactions
+* Add, update, and delete transactions
 * Transaction search and filtering
 * Transaction pagination
 * Income and expense tracking
 * Financial dashboard
-* Monthly financial analytics
-* Recent transaction tracking
+* Financial analytics dashboard
+* Revenue trend analysis
+* Daily transaction analysis
+* Monthly transaction analysis
+* Expense category analysis
+* Customer growth analysis
+* Payment method distribution
+* Transaction heatmap
 * Customer management
+* Customer analytics
+* Customer-to-transaction association
 * Rule-based fraud detection
 * Fraud alert management
 * Multiple login location detection
@@ -28,6 +36,8 @@ FinTrack is a full-stack personal finance and financial analytics dashboard that
 * PDF report export
 * Toast notifications
 * Responsive dashboard interface
+
+---
 
 ## Tech Stack
 
@@ -40,6 +50,11 @@ FinTrack is a full-stack personal finance and financial analytics dashboard that
 * React Router
 * Tailwind CSS
 * Recharts
+* Chart.js
+* react-chartjs-2
+* D3.js
+* Lucide React
+* React Hot Toast
 
 ### Backend
 
@@ -62,65 +77,91 @@ FinTrack is a full-stack personal finance and financial analytics dashboard that
 * GitHub
 * Visual Studio Code
 
+---
+
 ## Project Architecture
 
-The application follows a full-stack architecture:
+FinTrack follows a full-stack client-server architecture:
 
 ```text
-User
-  ↓
-React Frontend
-  ↓
-REST APIs
-  ↓
-Flask Backend
-  ↓
-SQLAlchemy ORM
-  ↓
-MySQL Database
+                    User
+                      │
+                      ▼
+              React Frontend
+                      │
+             Axios / REST APIs
+                      │
+                      ▼
+               Flask Backend
+                      │
+             Controllers / Routes
+                      │
+                      ▼
+              SQLAlchemy ORM
+                      │
+                      ▼
+                MySQL Database
 ```
 
-The backend is organized into routes, controllers, services, and models. The frontend is organized into pages, layouts, reusable components, context, and API services.
+The frontend is organized into pages, reusable components, layouts, authentication context, and API services.
+
+The backend is organized into routes, controllers, models, services, and database extensions.
+
+---
 
 ## Authentication
 
-FinTrack uses JWT-based authentication to secure protected resources.
+FinTrack uses JWT-based authentication to protect user resources.
 
 The authentication flow includes:
 
 1. User registration with name, email, and password.
-2. Password hashing before storing the password.
+2. Password hashing before storing credentials.
 3. Credential validation during login.
 4. JWT access token generation after successful login.
 5. Token storage on the frontend.
 6. Automatic JWT attachment to protected API requests.
-7. Protected backend endpoints using JWT verification.
-8. User-specific access to transactions, customers, reports, and fraud alerts.
+7. JWT verification on protected backend endpoints.
+8. User-specific authorization for application resources.
+
+Protected resources include:
+
+* Transactions
+* Customers
+* Customer analytics
+* Financial analytics
+* Reports
+* Fraud alerts
+
+---
 
 ## Dashboard
 
 The dashboard provides an overview of the user's financial activity.
 
-It displays:
+It displays information such as:
 
 * Total Balance
 * Total Income
 * Total Expenses
 * Total Transactions
-* Monthly income and expense analytics
+* Monthly financial activity
 * Recent transactions
 * Fraud alerts
 
-The dashboard retrieves data from protected backend APIs and displays it through reusable React components.
+The dashboard retrieves information from protected Flask REST APIs and presents it through reusable React components.
+
+---
 
 ## Transaction Management
 
-Users can manage their financial transactions through the Transactions page.
+Users can manage financial transactions through the Transactions page.
 
 Supported operations include:
 
 * Add transactions
 * View transactions
+* Update transactions
 * Delete transactions
 * Search transactions
 * Filter by transaction type
@@ -128,7 +169,7 @@ Supported operations include:
 * Filter by date
 * Paginate transaction results
 
-Each transaction contains information such as:
+Each transaction can contain:
 
 * Transaction ID
 * Title
@@ -137,41 +178,103 @@ Each transaction contains information such as:
 * Category
 * Payment Method
 * Status
+* Customer
 * Created At
 
 Transactions are associated with the authenticated user.
 
+Customer-related transactions can also be associated with customer records.
+
+---
+
+## Customer Management
+
+FinTrack includes customer management functionality for maintaining customer-related financial information.
+
+Users can:
+
+* Add customers
+* View customers
+* View individual customer details
+* Update customer information
+* Delete customers
+* View customer analytics
+
+Customer information includes:
+
+* Customer ID
+* Customer Name
+* Phone
+* Email
+* Created At
+
+Customer records are protected by user-specific authorization.
+
+Transactions can be associated with customers through the customer relationship in the database.
+
+Deleting a customer does not automatically delete the associated transactions, allowing historical transaction records to be preserved.
+
+---
+
 ## Financial Analytics
 
-The application provides financial analytics based on transaction data.
+FinTrack provides an analytics dashboard for analyzing financial activity.
 
-The dashboard calculates:
+The analytics page includes:
 
-* Total Income
-* Total Expenses
-* Current Balance
-* Total Transactions
+### Revenue Trend
 
-Balance is calculated as:
+Displays successful income and expense activity over time.
+
+### Daily Transactions
+
+Shows the number of transactions recorded on each day.
+
+### Monthly Transactions
+
+Displays transaction counts grouped by month and year.
+
+### Expense Analysis
+
+Groups successful expenses by category and calculates the total amount spent in each category.
+
+### Customer Growth
+
+Shows customer additions over time.
+
+### Payment Method Distribution
+
+Displays the distribution of successful transactions across different payment methods.
+
+### Transaction Heatmap
+
+Provides a visual representation of transaction activity across dates.
+
+The analytics dashboard uses interactive chart components to make financial trends easier to understand.
+
+---
+
+## Financial Calculations
+
+The dashboard calculates important financial metrics from transaction data.
+
+### Balance
 
 ```text
 Balance = Total Income - Total Expenses
 ```
 
-The application also provides:
+### Revenue
 
-* Category-wise expense summaries
-* Monthly income summaries
-* Monthly expense summaries
-* Recent transaction information
+Revenue is calculated from the relevant successful income transactions.
 
-## Customer Management
+### Expenses
 
-The backend includes customer management functionality.
+Expenses are calculated from successful expense transactions.
 
-Customers can be associated with transactions through relationships in the database.
+Analytics endpoints aggregate transaction data using SQLAlchemy database queries.
 
-Customer data is handled through protected backend APIs and is associated with the authenticated user.
+---
 
 ## Fraud Detection
 
@@ -183,29 +286,31 @@ Transactions with an amount of ₹50,000 or more generate a high-severity fraud 
 
 ### Multiple Failed Attempts
 
-Multiple failed transactions for the same user generate a high-severity fraud alert.
+Multiple failed transactions for the same user can generate a high-severity fraud alert.
 
 ### Multiple Transactions in a Short Duration
 
-Multiple transactions occurring within a five-minute period generate a medium-severity fraud alert.
+Multiple transactions occurring within a five-minute period can generate a medium-severity fraud alert.
 
 ### Multiple Login Locations
 
-The application tracks the user's previous login location.
+The application tracks previous login locations.
 
-If a user's login location changes, a high-severity fraud alert is generated.
+If a user's login location changes, a high-severity fraud alert can be generated.
 
 Example:
 
 ```text
-"Login location changed from Hyderabad to Vijayawada."
+Login location changed from Hyderabad to Vijayawada.
 ```
+
+---
 
 ## Fraud Alerts
 
-Detected suspicious activities are stored as fraud alerts in the database.
+Detected suspicious activities are stored as fraud alerts.
 
-Each fraud alert contains:
+Each fraud alert can contain:
 
 * Alert ID
 * User ID
@@ -215,13 +320,13 @@ Each fraud alert contains:
 * Message
 * Created At
 
-Users can view their fraud alerts through the dashboard.
-
 Fraud alerts are restricted to the authenticated user's data.
+
+---
 
 ## Financial Reports
 
-FinTrack supports financial reporting for different time periods.
+FinTrack supports financial reporting for multiple periods.
 
 Supported report types:
 
@@ -229,7 +334,7 @@ Supported report types:
 * Weekly
 * Monthly
 
-Reports contain:
+Reports provide information such as:
 
 * Total Transactions
 * Total Revenue
@@ -240,11 +345,13 @@ Reports contain:
 * Failed Transactions
 * Refunded Transactions
 
+---
+
 ## CSV Export
 
-Financial transactions can be exported as CSV files.
+Financial transaction data can be exported as CSV files.
 
-The exported CSV contains:
+The exported data can contain:
 
 * Transaction ID
 * Title
@@ -255,13 +362,19 @@ The exported CSV contains:
 * Status
 * Created At
 
-CSV reports are available for daily, weekly, and monthly periods.
+CSV reports are available for:
+
+* Daily
+* Weekly
+* Monthly
+
+---
 
 ## PDF Export
 
-FinTrack also supports PDF financial report generation.
+FinTrack also supports PDF report generation.
 
-PDF reports contain:
+PDF reports contain financial summaries and transaction information.
 
 ### Financial Summary
 
@@ -285,33 +398,54 @@ PDF reports contain:
 
 PDF reports are available for daily, weekly, and monthly periods.
 
+---
+
 ## API Architecture
 
 The backend follows a layered structure:
 
 ```text
-Routes → Controllers → Services → Models → Database
+Routes
+   ↓
+Controllers
+   ↓
+Services / Business Logic
+   ↓
+Models
+   ↓
+SQLAlchemy ORM
+   ↓
+MySQL Database
 ```
 
 ### Routes
 
-Define API endpoints and connect requests to controllers.
+Routes define API endpoints and connect incoming requests to controller functions.
 
 ### Controllers
 
-Handle requests, authentication, database operations, and API responses.
+Controllers handle:
+
+* Request processing
+* Authentication
+* Authorization
+* Database operations
+* Data aggregation
+* API responses
 
 ### Services
 
-Contain reusable business logic such as fraud detection.
+Services contain reusable business logic, including fraud detection and related processing.
 
 ### Models
 
-Define the database structure using SQLAlchemy ORM.
+SQLAlchemy models define the application's database structure and relationships.
+
+---
 
 ## Database Models
 
-The application contains the following major models:
+The application contains major models including:
 
 * User
 * Customer
@@ -320,40 +454,104 @@ The application contains the following major models:
 
 ### User
 
-Stores user authentication and profile information.
+Stores authentication and user profile information.
 
 ### Customer
 
-Stores customer information.
+Stores customer information associated with a user.
 
 ### Transaction
 
-Stores financial transaction information.
+Stores financial transaction information and can be associated with a customer.
 
 ### Fraud Alert
 
-Stores information about detected suspicious activity.
+Stores information about potentially suspicious activities.
+
+---
 
 ## Frontend Architecture
 
-The React frontend is organized into reusable components.
+The React frontend is organized into reusable sections:
 
-Main frontend sections include:
+```text
+frontend/
+│
+├── src/
+│   ├── components/
+│   │   ├── analytics/
+│   │   ├── common/
+│   │   ├── transactions/
+│   │   └── ...
+│   │
+│   ├── context/
+│   ├── layouts/
+│   ├── pages/
+│   ├── services/
+│   └── App.jsx
+```
+
+Important frontend sections include:
 
 * Authentication components
 * Common components
 * Dashboard components
+* Analytics components
+* Customer components
 * Fraud components
 * Transaction components
-* UI components
 * Pages
 * Layouts
 * Authentication context
 * API services
 
-The authentication context manages the current user's login state and logout functionality.
+The authentication context manages the user's login state and logout functionality.
 
-The centralized Axios API service handles communication with the Flask backend and automatically attaches JWT tokens to protected requests.
+The centralized Axios API service handles communication with the Flask backend and attaches JWT tokens to protected requests.
+
+---
+
+## Data Visualization
+
+FinTrack uses interactive visualization libraries to present financial data.
+
+Charts are used for:
+
+* Revenue trends
+* Transaction activity
+* Expense analysis
+* Customer growth
+* Payment method distribution
+* Other financial analytics
+
+The application primarily uses **Recharts** for React-based financial charts, with Chart.js and D3.js available for data visualization requirements and specialized visualizations.
+
+---
+
+## Security
+
+The application implements:
+
+* Password hashing
+* JWT-based authentication
+* Protected API endpoints
+* User-specific authorization
+* User-specific transaction access
+* User-specific customer access
+* User-specific analytics access
+* User-specific fraud alert access
+* User-specific report access
+* Environment-based configuration for sensitive values
+
+Sensitive values such as:
+
+* Database credentials
+* JWT secrets
+* API keys
+
+should be stored in environment variables and should not be committed to GitHub.
+
+---
 
 ## Installation and Setup
 
@@ -387,7 +585,7 @@ Activate the virtual environment on Windows:
 venv\Scripts\activate
 ```
 
-Install the required Python packages:
+Install the Python dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -397,7 +595,7 @@ Configure the required environment variables in the backend `.env` file.
 
 Make sure MySQL is running and the required database is configured.
 
-Run the backend:
+Run the Flask backend:
 
 ```bash
 python run.py
@@ -411,56 +609,66 @@ Open another terminal and navigate to the frontend directory:
 cd frontend
 ```
 
-Install dependencies:
+Install the dependencies:
 
 ```bash
 npm install
 ```
 
-Start the development server:
+Start the Vite development server:
 
 ```bash
 npm run dev
 ```
 
-Open the local URL provided by Vite in your browser.
+Open the local URL provided by Vite in the browser.
 
-## Security
+---
 
-The application implements:
+## Git and Environment Files
 
-* Password hashing
-* JWT-based authentication
-* Protected API endpoints
-* User-specific authorization
-* User-specific transaction access
-* User-specific customer access
-* User-specific fraud alert access
-* User-specific report access
-* Environment-based configuration for sensitive values
+Sensitive and generated files are excluded through `.gitignore`.
 
-Sensitive values such as database credentials and JWT secrets should be stored in environment variables and should not be committed to GitHub.
+Examples include:
+
+```text
+.env
+venv/
+node_modules/
+__pycache__/
+dist/
+.vscode/
+```
+
+Environment variables should never be committed to the repository.
+
+---
 
 ## Future Improvements
 
 Possible future improvements include:
 
 * Advanced machine-learning-based fraud detection
-* More financial analytics
 * Budget planning
 * Spending predictions
-* Additional report formats
+* Additional financial analytics
+* More report formats
 * Improved notification systems
 * More granular user roles and permissions
-* Automated testing
+* Automated unit and integration testing
 * Cloud deployment
 * Performance optimization
+* Advanced customer analytics
+
+---
 
 ## Author
 
 **Monika Aishwarya Vegesna**
 
 B.Tech – Computer Science (AI & Data Science)
+
+---
 
 ## License
 
